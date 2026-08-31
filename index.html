@@ -3,43 +3,37 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>KINETIC DESKS | مكاتب فاخرة للعمل والقيمنج</title>
+  <title>KINETIC DESKS | مكاتب فاخرة</title>
   
-  <!-- Fonts & Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/@lucide/web"></script>
   
-  <!-- Supabase JS Library -->
+  <!-- Supabase Library -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <!-- Sticky Luxury Navigation -->
+  <!-- Navigation Bar -->
   <header class="navbar">
     <div class="nav-container">
       <a href="#" class="brand-logo">K I N E T I C <span>DESKS</span></a>
       
       <nav class="nav-links">
         <button class="nav-btn active" data-category="All">الكل</button>
-        <button class="nav-btn" data-category="Executive">مكاتب تنفيذي</button>
-        <button class="nav-btn" data-category="Gaming">مكاتب قيمنج</button>
-        <button class="nav-btn" data-category="Office">مكاتب عمل</button>
-        <button class="nav-btn" data-category="Computer">كمبيوتر</button>
+        <button class="nav-btn" data-category="Executive">تنفيذي</button>
+        <button class="nav-btn" data-category="Gaming">قيمنج</button>
+        <button class="nav-btn" data-category="Office">مكتبي</button>
       </nav>
 
       <div class="nav-actions">
-        <button class="icon-btn" id="open-search" title="بحث في المنتجات">
-          <i data-lucide="search"></i>
-        </button>
         <button class="btn-admin-toggle" id="open-admin">
-          <i data-lucide="layout-dashboard"></i>
-          <span>لوحة التحكم (إضافة منتج)</span>
+          <i data-lucide="plus-circle"></i>
+          <span>إضافة منتج لـ Supabase</span>
         </button>
-        <button class="cart-trigger" id="open-cart" title="سلة المشتريات">
+        <button class="cart-trigger" id="open-cart">
           <i data-lucide="shopping-bag"></i>
           <span class="cart-badge" id="cart-count">0</span>
         </button>
@@ -51,186 +45,124 @@
   <section class="hero-section">
     <div class="hero-overlay"></div>
     <div class="hero-content">
-      <span class="hero-tag">هندسة ودقة إيطالية</span>
-      <h1>مصممة لمستويات أعلى من العمل واللعب.</h1>
-      <p>مكاتب مكتبية وتنفيذية وقيمنج صممت بحرفية عالية لترتقي بمساحتك الخاصة لمستويات غير مسبوقة.</p>
-      <div class="hero-actions">
-        <a href="#catalog" class="btn btn-primary">استكشف المجموعة</a>
-        <a href="#editorial" class="btn btn-secondary">شاهد الرؤية</a>
-      </div>
+      <span class="hero-tag">هندسة متطورة</span>
+      <h1>مكاتب فاخرة صممت لإنتاجية بلا حدود</h1>
+      <p>تشكيلة من أفضل المكاتب التنفيذية ومكاتب الـ Gaming في عمان.</p>
     </div>
   </section>
 
-  <!-- Features Grid -->
-  <section class="features-section">
-    <div class="features-container">
-      <div class="feature-card">
-        <div class="feature-icon"><i data-lucide="shield-check"></i></div>
-        <h3>خامات استثنائية</h3>
-        <p>خشب الجوز الطبيعي المعالج مع هياكل فولاذية مقاومة للخدش والاهتزاز.</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon"><i data-lucide="cpu"></i></div>
-        <h3>هندسة ذكية</h3>
-        <p>أنظمة مخفية لإدارة الكابلات ومحركات كهربائية هادئة مع محطات شحن لاسلكي.</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon"><i data-lucide="award"></i></div>
-        <h3>جودة موثوقة</h3>
-        <p>ضمان لمدة 10 سنوات على الهيكل الخارجي والمحركات الكهربائية.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- Search & Filter Controls Section -->
+  <!-- Filter & Search Bar -->
   <section class="filter-bar-section">
     <div class="filter-container">
       <div class="search-box">
         <i data-lucide="search"></i>
-        <input type="text" id="search-input" placeholder="ابحث عن اسم المكتب، الخامة، أو المواصفات...">
+        <input type="text" id="search-input" placeholder="ابحث عن اسم المنتج...">
       </div>
       <div class="sort-box">
-        <label>ترتيب حسب:</label>
+        <label>الترتيب:</label>
         <select id="sort-select">
-          <option value="featured">المميزة</option>
-          <option value="price-low">السعر: من الأقل للأعلى</option>
-          <option value="price-high">السعر: من الأعلى للأقل</option>
+          <option value="featured">الأحدث</option>
+          <option value="price-low">السعر: الأدنى أولاً</option>
+          <option value="price-high">السعر: الأعلى أولاً</option>
         </select>
       </div>
     </div>
   </section>
 
-  <!-- Catalog Main Grid -->
-  <main class="catalog-container" id="catalog">
+  <!-- Main Product Cards Grid -->
+  <main class="catalog-container">
     <div class="section-header">
-      <h2>المجموعة الكتانلوجية</h2>
-      <p id="product-count-label">جاري تحميل المنتجات...</p>
+      <h2>كتالوج المنتجات</h2>
+      <p id="product-count-label">جاري مزامنة المنتجات من Supabase...</p>
     </div>
 
-    <!-- Dynamic Product Cards -->
-    <div class="product-grid" id="product-grid"></div>
+    <div class="product-grid" id="product-grid">
+      <!-- Dynamic Product Cards Will Render Here -->
+    </div>
   </main>
 
-  <!-- Editorial Lifestyle Section -->
-  <section class="editorial-section" id="editorial">
-    <div class="editorial-container">
-      <div class="editorial-image">
-        <img src="https://images.unsplash.com/photo-1595515106969-1ce29566ff1c?q=80&w=1200" alt="Executive Luxury Office Desk Setup">
-      </div>
-      <div class="editorial-text">
-        <span class="hero-tag">فلسفة KINETIC</span>
-        <h2>مكتبك ليس مجرد قطعة أثاث.</h2>
-        <p>إنه المكان الذي تتحول فيه الأفكار إلى مشاريع حقيقية، والإنتاجية إلى متعة، واللعب إلى تجربة استثنائية. تم تصميم كل زاوية في مكاتبنا لتمنحك التركيز المطلق والراحة التي تستحقها.</p>
-        <a href="#catalog" class="btn btn-primary">ترقية مساحتك الآن</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- Full Admin Dashboard Modal Panel -->
+  <!-- Admin Modal (Add Product Form) -->
   <div class="admin-modal" id="admin-modal">
     <div class="modal-backdrop" id="close-admin-backdrop"></div>
     <div class="admin-modal-box">
       <div class="modal-header">
         <div>
-          <h3>لوحة إمكانيات الإدارة (Product Manager)</h3>
-          <p style="font-size: 0.8rem; color: var(--text-muted);">إضافة، تعديل وحذف منتجات المتجر مباشرة في Supabase</p>
+          <h3>إضافة منتج جديد للمتجر</h3>
+          <p style="font-size: 0.8rem; color: var(--text-muted);">سيتم نشر المنتج مباشرة على قاعدة بيانات Supabase</p>
         </div>
         <button id="close-admin" class="close-btn"><i data-lucide="x"></i></button>
       </div>
 
-      <!-- Add Product Form -->
       <form id="add-product-form" class="admin-form">
+        <div class="form-group">
+          <label>اسم المكتب / المنتج *</label>
+          <input type="text" id="p-name" class="form-control" placeholder="مثال: مكتب Apex Pro Standing Desk" required>
+        </div>
+
         <div class="form-row">
-          <div class="form-group">
-            <label>اسم المكتب *</label>
-            <input type="text" id="p-name" class="form-control" placeholder="مثال: مكتب Apex Pro Standing Desk" required>
-          </div>
           <div class="form-group">
             <label>الفئة *</label>
             <select id="p-category" class="form-control" required>
               <option value="Executive">Executive (تنفيذي)</option>
               <option value="Gaming">Gaming (قيمنج)</option>
               <option value="Office">Office (مكتبي)</option>
-              <option value="Computer">Computer (كمبيوتر)</option>
             </select>
           </div>
-        </div>
-
-        <div class="form-row">
           <div class="form-group">
-            <label>السعر (بالريال العماني OMR) *</label>
-            <input type="number" step="0.001" id="p-price" class="form-control" placeholder="85.000" required>
-          </div>
-          <div class="form-group">
-            <label>رابط الصورة الرئيسية (Direct URL) *</label>
-            <input type="url" id="p-image" class="form-control" placeholder="https://images.unsplash.com/..." required>
+            <label>السعر بالريال العماني (OMR) *</label>
+            <input type="number" step="0.001" id="p-price" class="form-control" placeholder="120.000" required>
           </div>
         </div>
 
         <div class="form-group">
-          <label>وصف مختصر للمنتج</label>
-          <textarea id="p-desc" class="form-control" rows="2" placeholder="مكتب إلكتروني مزود بمحرك مزدوج وذاكرة تعديل الارتفاع..."></textarea>
+          <label>رابط صورة المنتج (URL) *</label>
+          <input type="url" id="p-image" class="form-control" placeholder="https://images.unsplash.com/..." required>
         </div>
 
-        <button type="submit" class="btn btn-primary" style="width: 100%;">
-          <i data-lucide="plus"></i> إضافة المنتج للمتجر فوراً
+        <div class="form-group">
+          <label>وصف المنتج والمواصفات</label>
+          <textarea id="p-desc" class="form-control" rows="3" placeholder="اذكر أبعاد المكتب، نوع الخشب، والمزايا الذكية..."></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary" id="btn-submit-product" style="width: 100%;">
+          <i data-lucide="cloud-upload"></i> نشر المنتج مباشرة في Supabase
         </button>
       </form>
-
-      <!-- Managed Inventory Table -->
-      <div class="admin-inventory-section">
-        <h4>المنتجات الحالية المسجلة</h4>
-        <div class="inventory-list" id="admin-inventory-list">
-          <!-- Inventory Items Generated via JS -->
-        </div>
-      </div>
     </div>
   </div>
 
-  <!-- Cart Slide-over Drawer -->
+  <!-- Product Details Popup Modal -->
+  <div class="admin-modal" id="details-modal">
+    <div class="modal-backdrop" id="close-details-backdrop"></div>
+    <div class="admin-modal-box" style="max-width: 500px;">
+      <div class="modal-header">
+        <h3 id="details-title">تفاصيل المنتج</h3>
+        <button id="close-details" class="close-btn"><i data-lucide="x"></i></button>
+      </div>
+      <div id="details-body" style="margin-top: 15px;"></div>
+    </div>
+  </div>
+
+  <!-- Cart Drawer -->
   <div class="cart-drawer" id="cart-drawer">
     <div class="cart-backdrop" id="close-cart-backdrop"></div>
     <div class="cart-content">
       <div class="cart-header">
-        <h3>سلة المشتريات الفاخرة</h3>
+        <h3>سلة المشتريات</h3>
         <button id="close-cart" class="close-btn"><i data-lucide="x"></i></button>
       </div>
-
-      <div class="cart-items" id="cart-items">
-        <!-- Injected Dynamically -->
-      </div>
-
+      <div class="cart-items" id="cart-items"></div>
       <div class="cart-footer">
         <div class="subtotal-row">
           <span>المجموع الفرعي:</span>
-          <span class="subtotal-amount" id="cart-subtotal">0.000 ر.ع</span>
+          <span id="cart-subtotal">0.000 ر.ع</span>
         </div>
-        <p class="vat-note">* الأسعار شاملة الشحن والتوصيل داخل سلطنة عمان</p>
         <a id="whatsapp-checkout-btn" href="#" target="_blank" class="btn btn-whatsapp">
-          <i data-lucide="message-square"></i>
-          <span>إكمال الطلب المباشر عبر الواتساب</span>
+          <i data-lucide="message-square"></i> إرسال الطلب عبر الواتساب
         </a>
       </div>
     </div>
   </div>
-
-  <!-- Footer -->
-  <footer>
-    <div class="footer-container">
-      <div class="footer-brand">
-        <a href="#" class="brand-logo">K I N E T I C <span>DESKS</span></a>
-        <p>المتجر المفضل للمكاتب الفاخرة، المكاتب التنفيذية، وإعدادات القيمنج الاحترافية في سلطنة عمان.</p>
-      </div>
-      <div class="footer-contact">
-        <h4>تواصل معنا</h4>
-        <p>الواتساب المباشر للطلبات: +96872420073</p>
-        <p>مسقط، سلطنة عمان</p>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <p>جميع الحقوق محفوظة © 2026 KINETIC DESKS | تصميم وهندسة متكاملة.</p>
-    </div>
-  </footer>
 
   <script src="app.js"></script>
 </body>
