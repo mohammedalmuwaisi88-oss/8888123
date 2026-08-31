@@ -9,9 +9,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/@lucide/web"></script>
-  
-  <!-- Supabase Library -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -31,7 +28,7 @@
       <div class="nav-actions">
         <button class="btn-admin-toggle" id="open-admin">
           <i data-lucide="plus-circle"></i>
-          <span>إضافة منتج لـ Supabase</span>
+          <span>إضافة منتج</span>
         </button>
         <button class="cart-trigger" id="open-cart">
           <i data-lucide="shopping-bag"></i>
@@ -73,7 +70,7 @@
   <main class="catalog-container">
     <div class="section-header">
       <h2>كتالوج المنتجات</h2>
-      <p id="product-count-label">جاري مزامنة المنتجات من Supabase...</p>
+      <p id="product-count-label">جاري تحميل المنتجات...</p>
     </div>
 
     <div class="product-grid" id="product-grid">
@@ -88,7 +85,7 @@
       <div class="modal-header">
         <div>
           <h3>إضافة منتج جديد للمتجر</h3>
-          <p style="font-size: 0.8rem; color: var(--text-muted);">سيتم نشر المنتج مباشرة على قاعدة بيانات Supabase</p>
+          <p style="font-size: 0.8rem; color: var(--text-muted);">سيتم نشر المنتج وتخزينه مباشرة</p>
         </div>
         <button id="close-admin" class="close-btn"><i data-lucide="x"></i></button>
       </div>
@@ -125,7 +122,7 @@
         </div>
 
         <button type="submit" class="btn btn-primary" id="btn-submit-product" style="width: 100%;">
-          <i data-lucide="cloud-upload"></i> نشر المنتج مباشرة في Supabase
+          <i data-lucide="plus"></i> نشر المنتج في المتجر
         </button>
       </form>
     </div>
@@ -143,23 +140,32 @@
     </div>
   </div>
 
-  <!-- Cart Drawer -->
+  <!-- Cart Drawer & Checkout -->
   <div class="cart-drawer" id="cart-drawer">
     <div class="cart-backdrop" id="close-cart-backdrop"></div>
     <div class="cart-content">
       <div class="cart-header">
-        <h3>سلة المشتريات</h3>
+        <h3>سلة المشتريات والفاتورة</h3>
         <button id="close-cart" class="close-btn"><i data-lucide="x"></i></button>
       </div>
+      
+      <!-- Customer Information for Invoice -->
+      <div class="customer-info-box" style="padding: 15px 20px 5px; border-bottom: 1px solid var(--border-color);">
+        <h4 style="font-size:0.85rem; color:var(--accent-gold); margin-bottom:8px;">بيانات العميل لتجهيز الفاتورة:</h4>
+        <input type="text" id="cust-name" class="form-control" placeholder="اسمك الكامل *" style="margin-bottom:8px; font-size:0.8rem;">
+        <input type="text" id="cust-city" class="form-control" placeholder="المدينة / الولاية *" style="font-size:0.8rem;">
+      </div>
+
       <div class="cart-items" id="cart-items"></div>
+
       <div class="cart-footer">
         <div class="subtotal-row">
-          <span>المجموع الفرعي:</span>
+          <span>الإجمالي النهائي:</span>
           <span id="cart-subtotal">0.000 ر.ع</span>
         </div>
-        <a id="whatsapp-checkout-btn" href="#" target="_blank" class="btn btn-whatsapp">
-          <i data-lucide="message-square"></i> إرسال الطلب عبر الواتساب
-        </a>
+        <button id="whatsapp-checkout-btn" class="btn btn-whatsapp">
+          <i data-lucide="file-text"></i> إنشاء الفاتورة والإرسال عبر الواتساب
+        </button>
       </div>
     </div>
   </div>
