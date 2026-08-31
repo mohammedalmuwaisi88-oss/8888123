@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KINETIC DESKS | المكاتب الفاخرة</title>
+  
+  <!-- Font & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/@lucide/web"></script>
+  
+  <!-- Supabase JS Library -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Header Navigation -->
+  <header class="navbar">
+    <div class="nav-container">
+      <a href="#" class="brand-logo">K I N E T I C <span>DESKS</span></a>
+      
+      <nav class="nav-links">
+        <button class="nav-btn active" data-category="All">الكل</button>
+        <button class="nav-btn" data-category="Executive">مكاتب تنفيذي</button>
+        <button class="nav-btn" data-category="Gaming">مكاتب قيمنج</button>
+        <button class="nav-btn" data-category="Office">مكاتب عمل</button>
+      </nav>
+
+      <div class="nav-actions">
+        <button class="cart-trigger" id="open-cart">
+          <i data-lucide="shopping-bag"></i>
+          <span class="cart-badge" id="cart-count">0</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <span class="hero-tag">تصميم هندسي فاخر</span>
+      <h1>مصممة لمستويات أعلى من العمل واللعب.</h1>
+      <p>مكاتب مكتبية وقيمنج صممت بحرفية عالية لترتقي بمساحتك الخاصة.</p>
+      <div class="hero-actions">
+        <a href="#catalog" class="btn btn-primary">استكشف المجموعة</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Product Catalog -->
+  <main class="catalog-container" id="catalog">
+    <div class="section-header">
+      <h2>المجموعة المختارة</h2>
+      <p>تصفح أحدث المكاتب المصممة بعناية</p>
+    </div>
+
+    <!-- Product Grid -->
+    <div class="product-grid" id="product-grid">
+      <!-- Loading Skeletons rendered by JS -->
+    </div>
+  </main>
+
+  <!-- Slide-over Cart Drawer -->
+  <div class="cart-drawer" id="cart-drawer">
+    <div class="cart-backdrop" id="close-cart-backdrop"></div>
+    <div class="cart-content">
+      <div class="cart-header">
+        <h3>سلة المشتريات</h3>
+        <button id="close-cart"><i data-lucide="x"></i></button>
+      </div>
+
+      <div class="cart-items" id="cart-items">
+        <!-- Cart items injected dynamically -->
+      </div>
+
+      <div class="cart-footer">
+        <div class="subtotal-row">
+          <span>الإجمالي:</span>
+          <span class="subtotal-amount" id="cart-subtotal">0.000 ر.ع</span>
+        </div>
+        <a id="whatsapp-checkout-btn" href="#" target="_blank" class="btn btn-whatsapp">
+          <span>إكمال الطلب عبر الواتساب</span>
+          <i data-lucide="arrow-left"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
