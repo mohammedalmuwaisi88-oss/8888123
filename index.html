@@ -3,151 +3,43 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>KINETIC DESKS | المكاتب الفاخرة</title>
+  <title>KINETIC DESKS | مكاتب فاخرة للعمل والقيمنج</title>
   
+  <!-- Fonts & Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/@lucide/web"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   
-  <style>
-    :root {
-      --bg-main: #0F1012;
-      --bg-card: #121316;
-      --bg-surface: #1A1C20;
-      --border-color: rgba(255, 255, 255, 0.08);
-      --border-hover: rgba(255, 255, 255, 0.25);
-      --text-main: #F3F4F6;
-      --text-muted: #9CA3AF;
-      --accent-gold: #D4AF37;
-      --whatsapp-green: #059669;
-      --whatsapp-hover: #10B981;
-      --font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-    }
+  <!-- Supabase JS Library -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background-color: var(--bg-main); color: var(--text-main); font-family: var(--font-family); line-height: 1.6; overflow-x: hidden; }
-
-    /* Header */
-    .navbar { position: sticky; top: 0; z-index: 40; background-color: rgba(15, 16, 18, 0.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border-color); height: 80px; }
-    .nav-container { max-width: 1280px; margin: 0 auto; padding: 0 24px; height: 100%; display: flex; align-items: center; justify-content: space-between; }
-    .brand-logo { font-size: 1.25rem; letter-spacing: 0.25em; font-weight: 300; color: #FFF; text-decoration: none; }
-    .brand-logo span { font-weight: 700; color: var(--text-muted); }
-    .nav-links { display: flex; gap: 8px; }
-    .nav-btn { background: transparent; border: none; color: var(--text-muted); padding: 8px 16px; cursor: pointer; font-size: 0.85rem; transition: all 0.3s; border-radius: 4px; }
-    .nav-btn:hover, .nav-btn.active { color: #FFF; background-color: var(--bg-surface); }
-    .nav-actions { display: flex; align-items: center; gap: 16px; }
-
-    .btn-admin-toggle { background-color: var(--bg-surface); border: 1px solid var(--border-color); color: var(--accent-gold); padding: 8px 16px; border-radius: 4px; font-size: 0.8rem; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; gap: 6px; }
-    .btn-admin-toggle:hover { border-color: var(--accent-gold); background-color: rgba(212, 175, 55, 0.1); }
-
-    .cart-trigger { position: relative; background: transparent; border: none; color: var(--text-main); cursor: pointer; padding: 8px; }
-    .cart-badge { position: absolute; top: 0; right: -4px; background-color: #FFF; color: #000; font-size: 0.7rem; font-weight: 700; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
-
-    /* Hero */
-    .hero-section { position: relative; height: 75vh; min-height: 520px; background: url('https://images.unsplash.com/photo-1518455027359-f3f8164ba6bd?q=80&w=2000') center/cover no-repeat; display: flex; align-items: center; justify-content: center; text-align: center; padding: 0 24px; }
-    .hero-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(15,16,18,0.4), rgba(15,16,18,0.95)); }
-    .hero-content { position: relative; z-index: 10; max-width: 800px; }
-    .hero-tag { text-transform: uppercase; letter-spacing: 0.2em; font-size: 0.75rem; color: var(--accent-gold); margin-bottom: 12px; display: inline-block; }
-    .hero-content h1 { font-size: 2.75rem; font-weight: 400; margin-bottom: 16px; line-height: 1.2; }
-    .hero-content p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 32px; }
-
-    .btn { display: inline-flex; align-items: center; justify-content: center; padding: 14px 32px; text-decoration: none; font-size: 0.85rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; border-radius: 4px; transition: all 0.3s; cursor: pointer; border: none; }
-    .btn-primary { background-color: #FFF; color: #000; }
-    .btn-primary:hover { background-color: #E5E7EB; }
-
-    /* Featured Features */
-    .features-section { max-width: 1280px; margin: 0 auto; padding: 60px 24px; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; border-bottom: 1px solid var(--border-color); }
-    .feature-card { background: var(--bg-card); padding: 32px 24px; border-radius: 6px; border: 1px solid var(--border-color); text-align: center; }
-    .feature-icon { color: var(--accent-gold); margin-bottom: 16px; }
-    .feature-card h4 { font-size: 1.1rem; font-weight: 500; margin-bottom: 8px; }
-    .feature-card p { font-size: 0.85rem; color: var(--text-muted); }
-
-    /* Catalog Grid */
-    .catalog-container { max-width: 1280px; margin: 0 auto; padding: 80px 24px; }
-    .section-header { margin-bottom: 48px; display: flex; justify-content: space-between; align-items: flex-end; }
-    .section-header h2 { font-size: 1.75rem; font-weight: 400; }
-    .section-header p { color: var(--text-muted); font-size: 0.9rem; }
-
-    .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 32px; }
-    .product-card { background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; transition: border-color 0.3s, transform 0.3s; }
-    .product-card:hover { border-color: var(--border-hover); transform: translateY(-4px); }
-    .product-img-wrapper { position: relative; width: 100%; aspect-ratio: 4/3; background-color: var(--bg-surface); overflow: hidden; }
-    .product-img-wrapper img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
-    .product-card:hover img { transform: scale(1.05); }
-
-    .product-info { padding: 24px; display: flex; flex-direction: column; flex-grow: 1; justify-content: space-between; }
-    .product-category { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--text-muted); }
-    .product-title { font-size: 1.1rem; font-weight: 500; margin: 6px 0 12px; }
-    .product-desc { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 16px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-
-    .product-price-row { display: flex; align-items: center; justify-content: space-between; padding-top: 16px; border-top: 1px solid var(--border-color); }
-    .price-tag { font-size: 1rem; font-weight: 600; font-family: monospace; }
-
-    .btn-add { background-color: var(--bg-surface); color: #FFF; border: 1px solid var(--border-color); padding: 8px 16px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; transition: all 0.2s; }
-    .btn-add:hover { background-color: #FFF; color: #000; }
-
-    /* Admin Modal */
-    .admin-modal { position: fixed; inset: 0; z-index: 60; display: none; align-items: center; justify-content: center; }
-    .admin-modal.open { display: flex; }
-    .modal-backdrop { position: absolute; inset: 0; background-color: rgba(0,0,0,0.8); backdrop-filter: blur(6px); }
-    .admin-modal-box { position: relative; z-index: 10; background-color: var(--bg-card); border: 1px solid var(--border-hover); width: 100%; max-width: 600px; padding: 32px; border-radius: 8px; max-height: 90vh; overflow-y: auto; }
-    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; border-bottom: 1px solid var(--border-color); padding-bottom: 16px; }
-    
-    .form-group { margin-bottom: 16px; }
-    .form-group label { display: block; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 6px; }
-    .form-control { width: 100%; background: var(--bg-main); border: 1px solid var(--border-color); color: #FFF; padding: 10px 14px; border-radius: 4px; font-size: 0.9rem; outline: none; }
-    .form-control:focus { border-color: var(--accent-gold); }
-
-    /* Skeleton Loading */
-    .skeleton { background: linear-gradient(90deg, #121316 25%, #1A1C20 50%, #121316 75%); background-size: 200% 100%; animation: loading 1.5s infinite; border-radius: 4px; }
-    @keyframes loading { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
-
-    /* Drawer Cart */
-    .cart-drawer { position: fixed; inset: 0; z-index: 50; display: none; }
-    .cart-drawer.open { display: block; }
-    .cart-backdrop { position: absolute; inset: 0; background-color: rgba(0, 0, 0, 0.7); backdrop-filter: blur(4px); }
-    .cart-content { position: absolute; top: 0; left: 0; height: 100%; width: 100%; max-width: 440px; background-color: var(--bg-card); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; }
-    .cart-header { padding: 24px; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; }
-    .cart-header button { background: transparent; border: none; color: var(--text-muted); cursor: pointer; }
-    .cart-items { flex-grow: 1; overflow-y: auto; padding: 24px; }
-    .cart-item { display: flex; gap: 16px; margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid var(--border-color); }
-    .cart-item-img { width: 70px; height: 70px; border-radius: 4px; object-fit: cover; background-color: var(--bg-surface); }
-    .cart-item-details { flex-grow: 1; }
-    .cart-item-title { font-size: 0.9rem; font-weight: 500; }
-    .cart-item-price { font-size: 0.85rem; color: var(--text-muted); margin-top: 4px; font-family: monospace; }
-    .cart-controls { display: flex; align-items: center; gap: 12px; margin-top: 8px; }
-    .qty-btn { background-color: var(--bg-surface); color: #FFF; border: none; width: 24px; height: 24px; border-radius: 4px; cursor: pointer; }
-    .cart-footer { padding: 24px; border-top: 1px solid var(--border-color); background-color: var(--bg-main); }
-    .subtotal-row { display: flex; justify-content: space-between; font-size: 1.1rem; font-weight: 600; margin-bottom: 16px; font-family: monospace; }
-    .btn-whatsapp { width: 100%; background-color: var(--whatsapp-green); color: #FFF; gap: 8px; }
-    .btn-whatsapp:hover { background-color: var(--whatsapp-hover); }
-
-    /* Footer */
-    footer { border-top: 1px solid var(--border-color); padding: 60px 24px; background-color: var(--bg-main); text-align: center; color: var(--text-muted); font-size: 0.85rem; }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <!-- Navigation Bar -->
+  <!-- Sticky Luxury Navigation -->
   <header class="navbar">
     <div class="nav-container">
       <a href="#" class="brand-logo">K I N E T I C <span>DESKS</span></a>
       
       <nav class="nav-links">
         <button class="nav-btn active" data-category="All">الكل</button>
-        <button class="nav-btn" data-category="Executive">تنفيذي</button>
-        <button class="nav-btn" data-category="Gaming">قيمنج</button>
-        <button class="nav-btn" data-category="Office">مكتبي</button>
+        <button class="nav-btn" data-category="Executive">مكاتب تنفيذي</button>
+        <button class="nav-btn" data-category="Gaming">مكاتب قيمنج</button>
+        <button class="nav-btn" data-category="Office">مكاتب عمل</button>
+        <button class="nav-btn" data-category="Computer">كمبيوتر</button>
       </nav>
 
       <div class="nav-actions">
-        <button class="btn-admin-toggle" id="open-admin">
-          <i data-lucide="plus-circle"></i>
-          <span>إضافة منتج</span>
+        <button class="icon-btn" id="open-search" title="بحث في المنتجات">
+          <i data-lucide="search"></i>
         </button>
-        <button class="cart-trigger" id="open-cart">
+        <button class="btn-admin-toggle" id="open-admin">
+          <i data-lucide="layout-dashboard"></i>
+          <span>لوحة التحكم (إضافة منتج)</span>
+        </button>
+        <button class="cart-trigger" id="open-cart" title="سلة المشتريات">
           <i data-lucide="shopping-bag"></i>
           <span class="cart-badge" id="cart-count">0</span>
         </button>
@@ -159,104 +51,164 @@
   <section class="hero-section">
     <div class="hero-overlay"></div>
     <div class="hero-content">
-      <span class="hero-tag">تصميم هندسي فاخر</span>
+      <span class="hero-tag">هندسة ودقة إيطالية</span>
       <h1>مصممة لمستويات أعلى من العمل واللعب.</h1>
-      <p>مكاتب مكتبية وقيمنج صممت بحرفية عالية لترتقي بمساحتك الخاصة.</p>
+      <p>مكاتب مكتبية وتنفيذية وقيمنج صممت بحرفية عالية لترتقي بمساحتك الخاصة لمستويات غير مسبوقة.</p>
       <div class="hero-actions">
         <a href="#catalog" class="btn btn-primary">استكشف المجموعة</a>
+        <a href="#editorial" class="btn btn-secondary">شاهد الرؤية</a>
       </div>
     </div>
   </section>
 
-  <!-- Value Features -->
+  <!-- Features Grid -->
   <section class="features-section">
-    <div class="feature-card">
-      <div class="feature-icon"><i data-lucide="shield-check"></i></div>
-      <h4>مواد عالية الجودة</h4>
-      <p>خشب الأوك الطبيعي والمعادن المعالجة يدويًا</p>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon"><i data-lucide="zap"></i></div>
-      <h4>هندسة المكاتب الذكية</h4>
-      <p>أنظمة تنظيم الأسلاك والمحركات الكهروميكانيكية</p>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon"><i data-lucide="truck"></i></div>
-      <h4>توصيل وتركيب شامل</h4>
-      <p>خدمة التوصيل المباشر والتجميع الاحترافي</p>
+    <div class="features-container">
+      <div class="feature-card">
+        <div class="feature-icon"><i data-lucide="shield-check"></i></div>
+        <h3>خامات استثنائية</h3>
+        <p>خشب الجوز الطبيعي المعالج مع هياكل فولاذية مقاومة للخدش والاهتزاز.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><i data-lucide="cpu"></i></div>
+        <h3>هندسة ذكية</h3>
+        <p>أنظمة مخفية لإدارة الكابلات ومحركات كهربائية هادئة مع محطات شحن لاسلكي.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><i data-lucide="award"></i></div>
+        <h3>جودة موثوقة</h3>
+        <p>ضمان لمدة 10 سنوات على الهيكل الخارجي والمحركات الكهربائية.</p>
+      </div>
     </div>
   </section>
 
-  <!-- Catalog Section -->
+  <!-- Search & Filter Controls Section -->
+  <section class="filter-bar-section">
+    <div class="filter-container">
+      <div class="search-box">
+        <i data-lucide="search"></i>
+        <input type="text" id="search-input" placeholder="ابحث عن اسم المكتب، الخامة، أو المواصفات...">
+      </div>
+      <div class="sort-box">
+        <label>ترتيب حسب:</label>
+        <select id="sort-select">
+          <option value="featured">المميزة</option>
+          <option value="price-low">السعر: من الأقل للأعلى</option>
+          <option value="price-high">السعر: من الأعلى للأقل</option>
+        </select>
+      </div>
+    </div>
+  </section>
+
+  <!-- Catalog Main Grid -->
   <main class="catalog-container" id="catalog">
     <div class="section-header">
-      <div>
-        <h2>المجموعة المختارة</h2>
-        <p>تصفح أحدث المكاتب المصممة بعناية</p>
-      </div>
+      <h2>المجموعة الكتانلوجية</h2>
+      <p id="product-count-label">جاري تحميل المنتجات...</p>
     </div>
 
-    <!-- Product Grid -->
+    <!-- Dynamic Product Cards -->
     <div class="product-grid" id="product-grid"></div>
   </main>
 
-  <!-- Modal Panel: Add Product (Admin Access) -->
+  <!-- Editorial Lifestyle Section -->
+  <section class="editorial-section" id="editorial">
+    <div class="editorial-container">
+      <div class="editorial-image">
+        <img src="https://images.unsplash.com/photo-1595515106969-1ce29566ff1c?q=80&w=1200" alt="Executive Luxury Office Desk Setup">
+      </div>
+      <div class="editorial-text">
+        <span class="hero-tag">فلسفة KINETIC</span>
+        <h2>مكتبك ليس مجرد قطعة أثاث.</h2>
+        <p>إنه المكان الذي تتحول فيه الأفكار إلى مشاريع حقيقية، والإنتاجية إلى متعة، واللعب إلى تجربة استثنائية. تم تصميم كل زاوية في مكاتبنا لتمنحك التركيز المطلق والراحة التي تستحقها.</p>
+        <a href="#catalog" class="btn btn-primary">ترقية مساحتك الآن</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Full Admin Dashboard Modal Panel -->
   <div class="admin-modal" id="admin-modal">
     <div class="modal-backdrop" id="close-admin-backdrop"></div>
     <div class="admin-modal-box">
       <div class="modal-header">
-        <h3>إضافة منتج جديد لوحة التحكم</h3>
-        <button id="close-admin" style="background:none; border:none; color:#FFF; cursor:pointer;"><i data-lucide="x"></i></button>
+        <div>
+          <h3>لوحة إمكانيات الإدارة (Product Manager)</h3>
+          <p style="font-size: 0.8rem; color: var(--text-muted);">إضافة، تعديل وحذف منتجات المتجر مباشرة في Supabase</p>
+        </div>
+        <button id="close-admin" class="close-btn"><i data-lucide="x"></i></button>
       </div>
-      <form id="add-product-form">
-        <div class="form-group">
-          <label>اسم المنتج</label>
-          <input type="text" id="p-name" class="form-control" required placeholder="مثال: مكتب Executive Master">
+
+      <!-- Add Product Form -->
+      <form id="add-product-form" class="admin-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label>اسم المكتب *</label>
+            <input type="text" id="p-name" class="form-control" placeholder="مثال: مكتب Apex Pro Standing Desk" required>
+          </div>
+          <div class="form-group">
+            <label>الفئة *</label>
+            <select id="p-category" class="form-control" required>
+              <option value="Executive">Executive (تنفيذي)</option>
+              <option value="Gaming">Gaming (قيمنج)</option>
+              <option value="Office">Office (مكتبي)</option>
+              <option value="Computer">Computer (كمبيوتر)</option>
+            </select>
+          </div>
         </div>
-        <div class="form-group">
-          <label>الفئة</label>
-          <select id="p-category" class="form-control" required>
-            <option value="Executive">Executive (تنفيذي)</option>
-            <option value="Gaming">Gaming (قيمنج)</option>
-            <option value="Office">Office (مكتبي)</option>
-          </select>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>السعر (بالريال العماني OMR) *</label>
+            <input type="number" step="0.001" id="p-price" class="form-control" placeholder="85.000" required>
+          </div>
+          <div class="form-group">
+            <label>رابط الصورة الرئيسية (Direct URL) *</label>
+            <input type="url" id="p-image" class="form-control" placeholder="https://images.unsplash.com/..." required>
+          </div>
         </div>
+
         <div class="form-group">
-          <label>السعر (بالريال العماني)</label>
-          <input type="number" step="0.001" id="p-price" class="form-control" required placeholder="120.000">
+          <label>وصف مختصر للمنتج</label>
+          <textarea id="p-desc" class="form-control" rows="2" placeholder="مكتب إلكتروني مزود بمحرك مزدوج وذاكرة تعديل الارتفاع..."></textarea>
         </div>
-        <div class="form-group">
-          <label>رابط الصورة الرئيسية (URL)</label>
-          <input type="url" id="p-image" class="form-control" required placeholder="https://images.unsplash.com/...">
-        </div>
-        <div class="form-group">
-          <label>الوصف المختصر</label>
-          <textarea id="p-desc" class="form-control" rows="3" placeholder="مكتب راقي مع نظام التحكم بالارتفاع ومخرج للكابلات..."></textarea>
-        </div>
-        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 16px;">حفظ وإضافة للمتجر</button>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%;">
+          <i data-lucide="plus"></i> إضافة المنتج للمتجر فوراً
+        </button>
       </form>
+
+      <!-- Managed Inventory Table -->
+      <div class="admin-inventory-section">
+        <h4>المنتجات الحالية المسجلة</h4>
+        <div class="inventory-list" id="admin-inventory-list">
+          <!-- Inventory Items Generated via JS -->
+        </div>
+      </div>
     </div>
   </div>
 
-  <!-- Cart Drawer -->
+  <!-- Cart Slide-over Drawer -->
   <div class="cart-drawer" id="cart-drawer">
     <div class="cart-backdrop" id="close-cart-backdrop"></div>
     <div class="cart-content">
       <div class="cart-header">
-        <h3>سلة المشتريات</h3>
-        <button id="close-cart"><i data-lucide="x"></i></button>
+        <h3>سلة المشتريات الفاخرة</h3>
+        <button id="close-cart" class="close-btn"><i data-lucide="x"></i></button>
       </div>
 
-      <div class="cart-items" id="cart-items"></div>
+      <div class="cart-items" id="cart-items">
+        <!-- Injected Dynamically -->
+      </div>
 
       <div class="cart-footer">
         <div class="subtotal-row">
-          <span>الإجمالي:</span>
+          <span>المجموع الفرعي:</span>
           <span class="subtotal-amount" id="cart-subtotal">0.000 ر.ع</span>
         </div>
+        <p class="vat-note">* الأسعار شاملة الشحن والتوصيل داخل سلطنة عمان</p>
         <a id="whatsapp-checkout-btn" href="#" target="_blank" class="btn btn-whatsapp">
-          <span>إكمال الطلب عبر الواتساب</span>
-          <i data-lucide="arrow-left"></i>
+          <i data-lucide="message-square"></i>
+          <span>إكمال الطلب المباشر عبر الواتساب</span>
         </a>
       </div>
     </div>
@@ -264,225 +216,22 @@
 
   <!-- Footer -->
   <footer>
-    <p>جميع الحقوق محفوظة © 2026 KINETIC DESKS | المكاتب والحلول المكتبيّة الفاخرة</p>
+    <div class="footer-container">
+      <div class="footer-brand">
+        <a href="#" class="brand-logo">K I N E T I C <span>DESKS</span></a>
+        <p>المتجر المفضل للمكاتب الفاخرة، المكاتب التنفيذية، وإعدادات القيمنج الاحترافية في سلطنة عمان.</p>
+      </div>
+      <div class="footer-contact">
+        <h4>تواصل معنا</h4>
+        <p>الواتساب المباشر للطلبات: +96872420073</p>
+        <p>مسقط، سلطنة عمان</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>جميع الحقوق محفوظة © 2026 KINETIC DESKS | تصميم وهندسة متكاملة.</p>
+    </div>
   </footer>
 
-  <script>
-    // 1. Supabase Initialization
-    const SUPABASE_URL = 'https://gtynotqcwgdeynzmgbly.supabase.co';
-    const SUPABASE_KEY = 'sb_publishable_2c6dYLHIeaR6ohv7Tl5bQQ_QkDAOwsq';
-    const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-    // Cart State
-    let cart = JSON.parse(localStorage.getItem('kinetic_cart')) || [];
-    let currentCategory = 'All';
-
-    lucide.createIcons();
-
-    const productGrid = document.getElementById('product-grid');
-    const cartDrawer = document.getElementById('cart-drawer');
-    const cartCount = document.getElementById('cart-count');
-    const cartItemsContainer = document.getElementById('cart-items');
-    const cartSubtotal = document.getElementById('cart-subtotal');
-    const whatsappBtn = document.getElementById('whatsapp-checkout-btn');
-
-    const adminModal = document.getElementById('admin-modal');
-    const addProductForm = document.getElementById('add-product-form');
-
-    // Fetch Products Direct
-    async function fetchProducts(category = 'All') {
-      renderSkeletons();
-
-      try {
-        let query = db.from('products').select('*').order('created_at', { ascending: false });
-        
-        if (category !== 'All') {
-          query = query.eq('category', category);
-        }
-
-        const { data: products, error } = await query;
-
-        if (error) throw error;
-        renderProducts(products || []);
-      } catch (err) {
-        console.error('Error:', err.message);
-        productGrid.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: #EF4444;">تعذر تحميل المنتجات حالياً. يرجى المحاولة لاحقاً.</p>`;
-      }
-    }
-
-    function renderSkeletons() {
-      productGrid.innerHTML = Array(6).fill(0).map(() => `
-        <div class="product-card" style="height: 380px;">
-          <div class="skeleton" style="height: 200px; width: 100%;"></div>
-          <div style="padding: 20px;">
-            <div class="skeleton" style="height: 15px; width: 40%; margin-bottom: 10px;"></div>
-            <div class="skeleton" style="height: 20px; width: 80%; margin-bottom: 20px;"></div>
-            <div class="skeleton" style="height: 35px; width: 100%;"></div>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    function renderProducts(products) {
-      if (products.length === 0) {
-        productGrid.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 40px;">لا توجد منتجات متاحة في هذه الفئة حالياً.</p>`;
-        return;
-      }
-
-      productGrid.innerHTML = products.map(product => `
-        <div class="product-card">
-          <div class="product-img-wrapper">
-            <img src="${product.main_image}" alt="${product.name}" loading="lazy">
-          </div>
-          <div class="product-info">
-            <div>
-              <span class="product-category">${product.category}</span>
-              <h3 class="product-title">${product.name}</h3>
-              <p class="product-desc">${product.short_description || product.description || ''}</p>
-            </div>
-            <div class="product-price-row">
-              <span class="price-tag">${Number(product.price).toFixed(3)} ر.ع</span>
-              <button class="btn-add" onclick="addToCart('${product.id}', '${escapeQuotes(product.name)}', ${product.price}, '${product.main_image}')">
-                أضف للسلة
-              </button>
-            </div>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    function escapeQuotes(str) {
-      return str.replace(/'/g, "\\'");
-    }
-
-    // Add Product to Supabase
-    addProductForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-
-      const newProduct = {
-        name: document.getElementById('p-name').value,
-        slug: document.getElementById('p-name').value.toLowerCase().replace(/\s+/g, '-'),
-        category: document.getElementById('p-category').value,
-        price: parseFloat(document.getElementById('p-price').value),
-        main_image: document.getElementById('p-image').value,
-        short_description: document.getElementById('p-desc').value,
-        description: document.getElementById('p-desc').value
-      };
-
-      try {
-        const { error } = await db.from('products').insert([newProduct]);
-        if (error) throw error;
-
-        alert('تمت إضافة المنتج بنجاح إلى قواعد بيانات المتجر!');
-        addProductForm.reset();
-        adminModal.classList.remove('open');
-        fetchProducts(currentCategory);
-      } catch (err) {
-        alert('حدث خطأ أثناء حفظ المنتج: ' + err.message);
-      }
-    });
-
-    // Cart Logic
-    window.addToCart = function(id, name, price, image) {
-      const existing = cart.find(item => item.id === id);
-      if (existing) {
-        existing.quantity += 1;
-      } else {
-        cart.push({ id, name, price, image, quantity: 1 });
-      }
-      updateCartUI();
-      openCart();
-    };
-
-    window.updateQty = function(id, delta) {
-      const item = cart.find(i => i.id === id);
-      if (!item) return;
-
-      item.quantity += delta;
-      if (item.quantity <= 0) {
-        cart = cart.filter(i => i.id !== id);
-      }
-      updateCartUI();
-    };
-
-    function updateCartUI() {
-      localStorage.setItem('kinetic_cart', JSON.stringify(cart));
-      
-      const totalCount = cart.reduce((acc, item) => acc + item.quantity, 0);
-      cartCount.textContent = totalCount;
-
-      if (cart.length === 0) {
-        cartItemsContainer.innerHTML = `<p style="text-align: center; color: var(--text-muted); margin-top: 40px;">سلة المشتريات فارغة.</p>`;
-      } else {
-        cartItemsContainer.innerHTML = cart.map(item => `
-          <div class="cart-item">
-            <img src="${item.image}" alt="${item.name}" class="cart-item-img">
-            <div class="cart-item-details">
-              <div class="cart-item-title">${item.name}</div>
-              <div class="cart-item-price">${Number(item.price).toFixed(3)} ر.ع</div>
-              <div class="cart-controls">
-                <button class="qty-btn" onclick="updateQty('${item.id}', -1)">-</button>
-                <span>${item.quantity}</span>
-                <button class="qty-btn" onclick="updateQty('${item.id}', 1)">+</button>
-              </div>
-            </div>
-          </div>
-        `).join('');
-      }
-
-      const subtotal = cart.reduce((acc, item) => acc + (item.price * item.quantity), 0);
-      cartSubtotal.textContent = `${subtotal.toFixed(3)} ر.ع`;
-
-      generateWhatsAppLink(subtotal);
-    }
-
-    function generateWhatsAppLink(subtotal) {
-      const phone = '96872420073';
-      if (cart.length === 0) {
-        whatsappBtn.href = '#';
-        return;
-      }
-
-      let message = `السلام عليكم، أرغب في طلب المنتجات التالية:\n\n📋 *تفاصيل الطلب*\n`;
-      
-      cart.forEach(item => {
-        const itemTotal = (item.price * item.quantity).toFixed(3);
-        message += `\n• *${item.name}*\n  الكمية: ${item.quantity}\n  السعر: ${Number(item.price).toFixed(3)} ر.ع\n  الإجمالي: ${itemTotal} ر.ع\n`;
-      });
-
-      message += `\n━━━━━━━━━━━━━━\n`;
-      message += `*الإجمالي النهائي: ${subtotal.toFixed(3)} ر.ع*\n`;
-      message += `━━━━━━━━━━━━━━\n\n`;
-      message += `أرغب في إكمال الطلب ومعرفة تفاصيل التوصيل والدفع.`;
-
-      whatsappBtn.href = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
-    }
-
-    function openCart() { cartDrawer.classList.add('open'); }
-    function closeCart() { cartDrawer.classList.remove('open'); }
-
-    document.getElementById('open-cart').addEventListener('click', openCart);
-    document.getElementById('close-cart').addEventListener('click', closeCart);
-    document.getElementById('close-cart-backdrop').addEventListener('click', closeCart);
-
-    // Admin Toggle
-    document.getElementById('open-admin').addEventListener('click', () => adminModal.classList.add('open'));
-    document.getElementById('close-admin').addEventListener('click', () => adminModal.classList.remove('open'));
-    document.getElementById('close-admin-backdrop').addEventListener('click', () => adminModal.classList.remove('open'));
-
-    // Category Buttons
-    document.querySelectorAll('.nav-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-        e.target.classList.add('active');
-        currentCategory = e.target.dataset.category;
-        fetchProducts(currentCategory);
-      });
-    });
-
-    // Init App
-    fetchProducts();
-    updateCartUI();
-  </script>
+  <script src="app.js"></script>
 </body>
 </html>
