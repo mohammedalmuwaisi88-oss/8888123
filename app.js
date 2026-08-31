@@ -1,11 +1,4 @@
-// ==========================================
-// 1. Supabase Initialization & Configurations
-// ==========================================
-const SUPABASE_URL = 'https://gtynotqcwgdeynzmgbly.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_2c6dYLHIeaR6ohv7Tl5bQQ_QkDAOwsq';
-const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-// منتجات افتراضية معززة تعمل فوراً
+// قائمة منتجات أولية تضمن عمل الموقع مباشرة فور الفتح
 const DEFAULT_PRODUCTS = [
   {
     id: '1',
@@ -13,7 +6,7 @@ const DEFAULT_PRODUCTS = [
     category: 'Executive',
     price: 185.000,
     main_image: 'https://images.unsplash.com/photo-1518455027359-f3f8164ba6bd?q=80&w=800',
-    description: 'مكتب تنفيذي ذكي بمحرك مزدوج هادئ للغاية، محطة شحن لاسلكية مدمجة، وسطح خشب جوز طبيعي مقاوِم للخدش.'
+    description: 'مكتب تنفيذي ذكي بمحرك مزدوج هادئ للغاية، محطة شحن لاسلكية مدمجة، وسلالم خشبية فاخرة.'
   },
   {
     id: '2',
@@ -21,7 +14,7 @@ const DEFAULT_PRODUCTS = [
     category: 'Gaming',
     price: 125.000,
     main_image: 'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?q=80&w=800',
-    description: 'مصمم خصيصاً للجيمرز: دعم كامل لإدارة الكوابل، حامل سماعة، حامل كوب، وإضاءة RGB متكيفة مع اللعب.'
+    description: 'مصمم خصيصاً للجيمرز: دعم كامل لإدارة الكوابل، حامل سماعة، وحامل كوب مع إضاءة متكيفة.'
   },
   {
     id: '3',
@@ -30,44 +23,17 @@ const DEFAULT_PRODUCTS = [
     price: 95.000,
     main_image: 'https://images.unsplash.com/photo-1524758631624-e2822e304c36?q=80&w=800',
     description: 'مكتب مكتبي عصري بتصميم مينيملست يناسب المساحات الصغيرة مع متانة عالية وأرجل فولاذية.'
-  },
-  {
-    id: '4',
-    name: 'مكتب Titan Ultra Wide Gaming Desk',
-    category: 'Gaming',
-    price: 145.000,
-    main_image: 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?q=80&w=800',
-    description: 'سطح واسع جداً يتسع لـ 3 شاشات مع قماش ماوس باد ذكي يغطي كامل المكتب وسواعد تعليق ملحقات.'
   }
 ];
 
-let productsList = [];
+// حفظ المنتجات والسلة في الذاكرة المحلية حتى يظل الموقع متفاعلاً
+let productsList = JSON.parse(localStorage.getItem('kinetic_products')) || DEFAULT_PRODUCTS;
 let cart = JSON.parse(localStorage.getItem('kinetic_cart')) || [];
 let activeCategory = 'All';
 
 // ==========================================
-// 2. Fetch Data from Supabase & Render
+// 1. عرض البطاقات والمنتجات
 // ==========================================
-async function fetchProducts() {
-  const countLabel = document.getElementById('product-count-label');
-  if (countLabel) countLabel.textContent = 'جاري مزامنة المنتجات من Supabase...';
-
-  try {
-    let { data, error } = await db.from('products').select('*').order('created_at', { ascending: false });
-
-    if (error || !data || data.length === 0) {
-      productsList = [...DEFAULT_PRODUCTS];
-    } else {
-      // دمج منتجات السيرفر مع الافتراضية لمنع القوائم الفارغة
-      productsList = [...data, ...DEFAULT_PRODUCTS.filter(dp => !data.some(d => d.id == dp.id))];
-    }
-  } catch (err) {
-    productsList = [...DEFAULT_PRODUCTS];
-  }
-
-  renderProducts();
-}
-
 function renderProducts() {
   const grid = document.getElementById('product-grid');
   const searchInput = document.getElementById('search-input');
@@ -92,7 +58,7 @@ function renderProducts() {
   if (countLabel) countLabel.textContent = `عرض ${filtered.length} منتج`;
 
   if (filtered.length === 0) {
-    grid.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 50px 0;">لا توجد منتجات تطابق اختيارك.</p>`;
+    grid.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 50px 0;">لا توجد منتجات تطابق البحث.</p>`;
     return;
   }
 
@@ -113,7 +79,6 @@ function renderProducts() {
             <button class="btn-icon" onclick="showProductDetails('${product.id}')" title="عرض التفاصيل">
               <i data-lucide="eye"></i>
             </button>
-
             <button class="btn-add-cart" onclick="addToCart('${product.id}')">
               <i data-lucide="shopping-bag" style="width:14px; height:14px; margin-left:4px;"></i> إضافة
             </button>
@@ -127,19 +92,15 @@ function renderProducts() {
 }
 
 // ==========================================
-// 3. Add Product functionality (Supabase)
+// 2. تفعيل نموذج إضافة منتج جديد
 // ==========================================
 const addForm = document.getElementById('add-product-form');
 if (addForm) {
-  addForm.addEventListener('submit', async (e) => {
+  addForm.addEventListener('submit', (e) => {
     e.preventDefault();
-    
-    const submitBtn = document.getElementById('btn-submit-product');
-    const originalText = submitBtn.innerHTML;
-    submitBtn.disabled = true;
-    submitBtn.textContent = 'جاري النشر في Supabase...';
 
     const newProduct = {
+      id: Date.now().toString(),
       name: document.getElementById('p-name').value,
       category: document.getElementById('p-category').value,
       price: parseFloat(document.getElementById('p-price').value),
@@ -147,22 +108,10 @@ if (addForm) {
       description: document.getElementById('p-desc').value
     };
 
-    try {
-      const { data, error } = await db.from('products').insert([newProduct]).select();
+    productsList.unshift(newProduct);
+    localStorage.setItem('kinetic_products', JSON.stringify(productsList));
 
-      if (error) {
-        alert('تم إضافة المنتج للمتجر بنجاح (وضع العرض السريع).');
-        productsList.unshift({ id: Date.now().toString(), ...newProduct });
-      } else {
-        alert('✅ تم نشر المنتج بنجاح وحفظه في Supabase!');
-        if (data && data[0]) productsList.unshift(data[0]);
-      }
-    } catch (err) {
-      productsList.unshift({ id: Date.now().toString(), ...newProduct });
-    }
-
-    submitBtn.disabled = false;
-    submitBtn.innerHTML = originalText;
+    alert('✅ تم نشر المنتج وإضافته للكتالوج بنجاح!');
     
     addForm.reset();
     document.getElementById('admin-modal').classList.remove('open');
@@ -171,7 +120,7 @@ if (addForm) {
 }
 
 // ==========================================
-// 4. Product Details Modal
+// 3. عرض التفاصيل في النافذة المنبثقة
 // ==========================================
 window.showProductDetails = function(id) {
   const p = productsList.find(item => item.id == id);
@@ -188,7 +137,7 @@ window.showProductDetails = function(id) {
         <span style="background:rgba(212,175,55,0.2); color:var(--accent-gold); padding:4px 8px; border-radius:4px; font-size:0.75rem; font-weight:bold;">${p.category}</span>
         <span style="color: var(--accent-gold); font-weight:bold; font-size:1.2rem;">${Number(p.price).toFixed(3)} ر.ع</span>
       </div>
-      <p style="font-size:0.9rem; color: var(--text-muted); line-height:1.6;">${p.description || 'لا يوجد وصف إضافي متوفر حالياً.'}</p>
+      <p style="font-size:0.9rem; color: var(--text-muted); line-height:1.6;">${p.description || 'لا يوجد وصف إضافي متوفر.'}</p>
       <button class="btn btn-primary" style="width:100%; margin-top:20px;" onclick="addToCart('${p.id}'); document.getElementById('details-modal').classList.remove('open');">
         إضافة للسلة الآن
       </button>
@@ -200,7 +149,7 @@ window.showProductDetails = function(id) {
 };
 
 // ==========================================
-// 5. Interactive Cart Management
+// 4. إدارة السلة وتغيير الكميات
 // ==========================================
 window.addToCart = function(id) {
   const p = productsList.find(item => item.id == id);
@@ -226,11 +175,6 @@ window.changeCartQty = function(id, delta) {
     cart = cart.filter(i => i.id != id);
   }
 
-  updateCart();
-};
-
-window.removeFromCart = function(id) {
-  cart = cart.filter(i => i.id != id);
   updateCart();
 };
 
@@ -270,25 +214,58 @@ function updateCart() {
   const total = cart.reduce((acc, i) => acc + (i.price * i.qty), 0);
   document.getElementById('cart-subtotal').textContent = `${total.toFixed(3)} ر.ع`;
 
-  // WhatsApp Integration
-  const phone = '96872420073';
-  let msg = `طلب جديد من المتجر:\n------------------\n`;
-  cart.forEach(i => msg += `• ${i.name} (العدد: ${i.qty}) - السعر: ${(i.price * i.qty).toFixed(3)} ر.ع\n`);
-  msg += `------------------\nالمجموع الإجمالي: ${total.toFixed(3)} ر.ع`;
-  
-  const whatsappBtn = document.getElementById('whatsapp-checkout-btn');
-  if (whatsappBtn) {
-    whatsappBtn.href = `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
-  }
-
   if (window.lucide) lucide.createIcons();
 }
 
 // ==========================================
-// 6. UI Controls & Listeners
+// 5. تجهيز الفاتورة الاحترافية وفتح الواتساب
+// ==========================================
+const whatsappBtn = document.getElementById('whatsapp-checkout-btn');
+if (whatsappBtn) {
+  whatsappBtn.onclick = () => {
+    if (cart.length === 0) {
+      alert('السلة فارغة! يرجى إضافة منتجات أولاً.');
+      return;
+    }
+
+    const name = document.getElementById('cust-name').value.trim() || 'عميل غير مسجل';
+    const city = document.getElementById('cust-city').value.trim() || 'غير محدد';
+    const invNum = 'INV-' + Math.floor(100000 + Math.random() * 900000);
+    const date = new Date().toLocaleDateString('ar-EG');
+    const total = cart.reduce((acc, i) => acc + (i.price * i.qty), 0);
+
+    // بناء نص الفاتورة المنظم
+    let invoiceText = `🧾 *فاتورة طلب جديدة - KINETIC DESKS*\n`;
+    invoiceText += `----------------------------------------\n`;
+    invoiceText += `📌 *رقم الفاتورة:* ${invNum}\n`;
+    invoiceText += `📅 *التاريخ:* ${date}\n`;
+    invoiceText += `👤 *العميل:* ${name}\n`;
+    invoiceText += `📍 *الولاية/المدينة:* ${city}\n`;
+    invoiceText += `----------------------------------------\n\n`;
+    invoiceText += `📦 *المنتجات المطلوب شراءها:*\n`;
+
+    cart.forEach((item, index) => {
+      const itemTotal = (item.price * item.qty).toFixed(3);
+      invoiceText += `${index + 1}. *${item.name}*\n`;
+      invoiceText += `   العدد: ${item.qty} | السعر: ${Number(item.price).toFixed(3)} ر.ع | الإجمالي: ${itemTotal} ر.ع\n\n`;
+    });
+
+    invoiceText += `----------------------------------------\n`;
+    invoiceText += `💰 *المجموع النهائي للفاتورة:* ${total.toFixed(3)} ر.ع\n`;
+    invoiceText += `----------------------------------------\n`;
+    invoiceText += `✨ *شكراً لتسوقك معنا، يرجى تأكيد الطلب للبدء في الشحن.*`;
+
+    // رقم الواتساب بالرمز الدولي
+    const phone = '96872420073';
+    const url = `https://wa.me/${phone}?text=${encodeURIComponent(invoiceText)}`;
+    window.open(url, '_blank');
+  };
+}
+
+// ==========================================
+// 6. التحكم بالأزرار والتفاعل
 // ==========================================
 document.addEventListener('DOMContentLoaded', () => {
-  // Modal Buttons
   const openAdmin = document.getElementById('open-admin');
   if (openAdmin) openAdmin.onclick = () => document.getElementById('admin-modal').classList.add('open');
 
@@ -304,7 +281,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const closeDetailsBackdrop = document.getElementById('close-details-backdrop');
   if (closeDetailsBackdrop) closeDetailsBackdrop.onclick = () => document.getElementById('details-modal').classList.remove('open');
 
-  // Cart Buttons
   const openCart = document.getElementById('open-cart');
   if (openCart) openCart.onclick = () => document.getElementById('cart-drawer').classList.add('open');
 
@@ -314,7 +290,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const closeCartBackdrop = document.getElementById('close-cart-backdrop');
   if (closeCartBackdrop) closeCartBackdrop.onclick = () => document.getElementById('cart-drawer').classList.remove('open');
 
-  // Search & Filter
   const searchInput = document.getElementById('search-input');
   if (searchInput) searchInput.oninput = renderProducts;
 
@@ -330,7 +305,6 @@ document.addEventListener('DOMContentLoaded', () => {
     };
   });
 
-  // App Initialization
-  fetchProducts();
+  renderProducts();
   updateCart();
 });
